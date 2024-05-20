@@ -11,10 +11,11 @@ import bunrePckg from './package.json' assert { type: 'json' };
 import { join } from 'node:path';
 import fs from 'node:fs';
 
-function log(...args: any[]) {
-    console.log(`\x1b[34m[${bunrePckg.name}]\x1b[0m`, ...args);
-}
+// function log(...args: any[]) {
+//     console.log(`\x1b[34m[${bunrePckg.name}]\x1b[0m`, ...args);
+// }
 
+const log = console.log
 const $log = async (...args: any[]) => {
     args = await Promise.all(args.map(async (arg) => await arg.text()));
     args = args.map((arg) => arg.trim());
@@ -56,12 +57,23 @@ log('new versionStr', newVersionStr, versionIsSignificant)
 if (versionIsSignificant) {
     // git add tag
     log("comminting version", newVersionStr)
-    // const gitTagOutput = await Bun.$`git tag -a v${newVersionStr} -m "release: v${newVersionStr}"`.text();
-    // const gitPushOutput = await Bun.$`git push origin`.text();
-    // const gitPushTagsOutput = await Bun.$`git push --tags`.text();
-    // log('git tag -a v${newVersionStr} -m "release: v${newVersionStr}"', gitTagOutput)
-    // log('git push origin', gitPushOutput)
-    // log('git push --tags', gitPushTagsOutput)
+    // git delete tag
+    // git delete tag from origin
+    try {
+        await Bun.$`git tag -d v${newVersionStr}`.text();
+        await Bun.$`git push --delete origin v${newVersionStr}`.text();
+    } catch (e) {
+        log('no tag to delete')
+    }
+    //log('git tag -d v${newVersionStr}', gitPushTagsOutput)
+    await Bun.$`git tag -a v${newVersionStr} -m "release: v${newVersionStr}"`.text();
+    //git push
+    const gitPushOriginOutput = await Bun.$`git push origin v${newVersionStr}`.text();
+    log('git push origin', gitPushOriginOutput)
+    // git push tags
+    const gitPushTagsOutput = await Bun.$`git push origin --tags`.text();
+    log('git push origin --tags', gitPushTagsOutput)
+
 } else if (gitStatusOutput.trim() !== "") {
     log("git status is not clean. commiting chore: progress");
     log('git status', gitStatusOutput)
