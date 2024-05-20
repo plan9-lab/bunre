@@ -34,6 +34,22 @@ assert(pckgVer, 'package.json version is not defined')
 
 const pckgVerParts = pckgVer.split('.') // major.minor.patch
 
+// check write access to repo by pushing random tag
+// and deleting it
+try {
+    const randomTagName = `v${Math.random().toString(36).substring(2)}`
+    await _($`git tag ${randomTagName}`)
+    await _($`git tag -d ${randomTagName}`)
+    await _($`git push origin --delete ${randomTagName}`)
+    log(`random tag ${randomTagName} was deleted`)
+    log(`you have write access to repo`)
+} catch (e: any) {
+    if (e.info.exitCode === 128) {
+        log('no write access to repo. exiting. please check your ~/.ssh/config')
+        process.exit(0)
+    }
+}
+
 log('cwd', cwd)
 info('bunre version', bunrePckg.version)
 log('current package name', pckg.name)
@@ -114,4 +130,4 @@ const gitTagPushOutput = await _($`git push origin`)
 log('git push origin', gitTagPushOutput)
 
 const gitPushTagsOutput = await _($`git push origin --tags`)
-log('git push origin --tags', gitPushTagsOutput)
+log('git push origin ', gitPushTagsOutput)
