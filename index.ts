@@ -53,7 +53,14 @@ if (gitLogOutput.trim() === "") {
 const newVersionStr = newVersion.join('.');
 const versionIsSignificant = newVersionStr !== pkg.version;
 if (versionIsSignificant) {
-    log('version is significant');
+    // git add tag
+    log("comminting version", newVersionStr)
+    const gitTagOutput = await Bun.$`git tag -a v${newVersionStr} -m "release: v${newVersionStr}"`.text();
+    const gitPushOutput = await Bun.$`git push origin`.text();
+    const gitPushTagsOutput = await Bun.$`git push --tags`.text();
+    log('git tag -a v${newVersionStr} -m "release: v${newVersionStr}"', gitTagOutput)
+    log('git push origin', gitPushOutput)
+    log('git push --tags', gitPushTagsOutput)
 } else if (gitStatusOutput.trim() !== "") {
     log("git status is not clean. commiting chore: progress");
     log('git status', gitStatusOutput)
