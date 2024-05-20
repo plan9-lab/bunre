@@ -27,7 +27,7 @@ const $log = async (...args: any[]) => {
     log(...args);
 }
 
-await $log(Bun.$`git log --oneline`);
+await $log(Bun.$`git log origin/main..HEAD --oneline`);
 
 const cwd = process.cwd();
 const pkgPath = join(cwd, 'package.json');
