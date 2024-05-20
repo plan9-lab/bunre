@@ -50,7 +50,11 @@ if (gitLogOutput.trim() === "") {
     log('new version', newVersion)
 }
 
-if (gitStatusOutput.trim() !== "") {
+const newVersionStr = newVersion.join('.');
+const versionIsSignificant = newVersionStr !== pkg.version;
+if (versionIsSignificant) {
+    log('version is significant');
+} else if (gitStatusOutput.trim() !== "") {
     log("git status is not clean. commiting chore: progress");
     log('git status', gitStatusOutput)
     const gitAddallOutput = await Bun.$`git add .`.text();
