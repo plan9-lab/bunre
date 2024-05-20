@@ -79,7 +79,7 @@ if (newVersionName !== pckgVer) {
     log('git add package.json', gitAddPckgOutput)
 
     const gitCommitChoreOutput = await _($`git commit -m "release: ${newTagName}"`)
-    log('git commit -m "release: ${newTagName}"', gitCommitChoreOutput)
+    log(`git commit -m "release: ${newTagName}"`, gitCommitChoreOutput)
 } else {
     // git add .
     const gitAddallOutput = await _($`git add .`)
