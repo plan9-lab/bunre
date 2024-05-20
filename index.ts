@@ -33,7 +33,6 @@ log(pkg.name, pkg.version);
 const gitStatusOutput = await Bun.$`git status --porcelain`.text();
 const gitLogOutput = await Bun.$`git log origin..HEAD --oneline`.text();
 
-log('asserting git status is clean')
 if (gitLogOutput.trim() === "") {
     log("git log is empty.");
 } else {
