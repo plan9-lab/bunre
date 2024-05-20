@@ -130,4 +130,4 @@ const gitTagPushOutput = await _($`git push origin`)
 log('git push origin', gitTagPushOutput)
 
 const gitPushTagsOutput = await _($`git push origin ${newTagName}`)
-log('git push origin ', gitPushTagsOutput)
+log(`git push origin ${newTagName}`, gitPushTagsOutput)
