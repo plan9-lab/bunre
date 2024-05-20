@@ -23,3 +23,12 @@ This will:
 - push the new tag
 - push the new tag to origin
 - if there is no conventional commits, then it will comit chore: progress and exit
+
+## Roadmap
+
+- [ ] dry run mode should be default
+- [ ] release notes should be generated
+- [ ] add support for feature branches
+- [ ] add command line tools
+- [ ] when git status returns only MD automaticaly generate docs: ... commit and push
+- [ ] cli task manager
