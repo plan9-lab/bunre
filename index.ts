@@ -36,18 +36,20 @@ const pckgVerParts = pckgVer.split('.') // major.minor.patch
 
 // check write access to repo by pushing random tag
 // and deleting it
+const randomTagName = `v${Math.random().toString(36).substring(2)}`
+
 try {
-    const randomTagName = `v${Math.random().toString(36).substring(2)}`
+
     await _($`git tag ${randomTagName}`)
-    await _($`git tag -d ${randomTagName}`)
+    await _($`git push origin ${randomTagName}`)
     await _($`git push origin --delete ${randomTagName}`)
     log(`random tag ${randomTagName} was deleted`)
     log(`you have write access to repo`)
 } catch (e: any) {
-    if (e.info.exitCode === 128) {
-        log('no write access to repo. exiting. please check your ~/.ssh/config')
-        process.exit(0)
-    }
+    await _($`git tag -d ${randomTagName}`)
+    log('no write access to repo. exiting. please check your ~/.ssh/config')
+    log(e)
+    process.exit(0)
 }
 
 log('cwd', cwd)
