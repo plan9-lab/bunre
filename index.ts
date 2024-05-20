@@ -73,7 +73,7 @@ log('new tag name', newTagName)
 if (newVersionName !== pckgVer) {
     pckg.version = newVersionName
 
-    log('updated package version to', pckg.version)
+    log('updating package.json', newVersionName)
     fs.writeFileSync(join(cwd, 'package.json'), JSON.stringify(pckg, null, 2))
 
     const gitAddPckgOutput = await _($`git add package.json`)
@@ -81,9 +81,22 @@ if (newVersionName !== pckgVer) {
 
     const gitCommitChoreOutput = await _($`git commit -m "release: ${newTagName}"`)
     log('git commit -m "release: ${newTagName}"', gitCommitChoreOutput)
+} else {
+    // git add .
+    const gitAddallOutput = await _($`git add .`)
+    log('git add .', gitAddallOutput)
+
+    // git commit -m "chore: progress"
+    const gitCommitChoreOutput = await _($`git commit -m "chore: progress"`)
+    log('git commit -m "chore: progress"', gitCommitChoreOutput)
+
+    const gitPushChoreOutput = await _($`git push origin`)
+    log('git push origin', gitPushChoreOutput)
+
+    log('pushed chore: progress and exitiong. no significant changes')
+    process.exit(0)
 }
 
-// process.exit(0)
 
 try {
     const gitTagShowOutput = await _($`git show ${newTagName}`)
