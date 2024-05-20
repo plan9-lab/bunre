@@ -102,7 +102,9 @@ try {
     await _($`git push origin --delete ${newTagName}`)
 } catch (e: any) {
     log(`no tag named ${newTagName}`)
-    console.error(e.info.exitCode)
+    if (e.info.exitCode !== 128) {
+        throw e
+    }
 }
 
 const gitTagAddOutput = await _($`git tag -a ${newTagName} -m "release: ${newTagName}"`)
