@@ -52,6 +52,7 @@ if (gitLogOutput.trim() === "") {
 
 const newVersionStr = newVersion.join('.');
 const versionIsSignificant = newVersionStr !== pkg.version;
+log('new version', newVersionStr)
 if (versionIsSignificant) {
     // git add tag
     log("comminting version", newVersionStr)
