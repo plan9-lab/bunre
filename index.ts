@@ -32,11 +32,10 @@ const pckgVer = pckg.version
 
 assert(pckgVer, 'package.json version is not defined')
 
-// major.minor.patch
-const pckgVerParts = pckgVer.split('.')
+const pckgVerParts = pckgVer.split('.') // major.minor.patch
 
-info('bunre version', bunrePckg.version)
 log('cwd', cwd)
+info('bunre version', bunrePckg.version)
 log('current package name', pckg.name)
 log('current package version', pckgVer)
 
