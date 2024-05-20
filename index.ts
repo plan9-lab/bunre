@@ -96,13 +96,13 @@ if (newVersionName !== pckgVer) {
     process.exit(0)
 }
 
-
 try {
-    const gitTagShowOutput = await _($`git show ${newTagName}`)
-    const gitRemoveLocalTagOutput = await _($`git tag -d ${newTagName}`)
-    const gitRemoveTagFromOriginOutput = await _($`git push origin --delete ${newTagName}`)
+    await _($`git show ${newTagName}`)
+    await _($`git tag -d ${newTagName}`)
+    await _($`git push origin --delete ${newTagName}`)
 } catch (e: any) {
     log(`no tag named ${newTagName}`)
+    log(e)
 }
 
 const gitTagAddOutput = await _($`git tag -a ${newTagName} -m "release: ${newTagName}"`)
