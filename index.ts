@@ -39,7 +39,6 @@ const pckgVerParts = pckgVer.split('.') // major.minor.patch
 const randomTagName = `v${Math.random().toString(36).substring(2)}`
 
 try {
-
     await _($`git tag ${randomTagName}`)
     await _($`git push origin ${randomTagName}`)
     await _($`git push origin --delete ${randomTagName}`)
@@ -48,8 +47,7 @@ try {
 } catch (e: any) {
     await _($`git tag -d ${randomTagName}`)
     log('no write access to repo. exiting. please check your ~/.ssh/config')
-    log(e)
-    process.exit(0)
+    throw e
 }
 
 log('cwd', cwd)
@@ -131,5 +129,5 @@ log('git tag -a', gitTagAddOutput)
 const gitTagPushOutput = await _($`git push origin`)
 log('git push origin', gitTagPushOutput)
 
-const gitPushTagsOutput = await _($`git push origin --tags`)
+const gitPushTagsOutput = await _($`git push origin ${newTagName}`)
 log('git push origin ', gitPushTagsOutput)
