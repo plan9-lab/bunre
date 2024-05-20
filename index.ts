@@ -27,8 +27,6 @@ const $log = async (...args: any[]) => {
     log(...args);
 }
 
-await $log(Bun.$`git log origin/main..HEAD --oneline`);
-
 const cwd = process.cwd();
 const pkgPath = join(cwd, 'package.json');
 const pkg = JSON.parse(fs.readFileSync(pkgPath, 'utf8'));
@@ -39,27 +37,27 @@ log(bunrePckg.name, bunrePckg.version);
 log(pkg.name, pkg.version);
 
 const gitStatusOutput = await Bun.$`git status --porcelain`.text();
-const gitLogOutput = await Bun.$`git log --oneline`.text();
+const gitLogOutput = await Bun.$`git log origin..HEAD --oneline`.text();
 
 if (gitLogOutput.trim() === "") {
-    log("git log is empty. ");
-    process.exit(1);
+    log("git log is empty.");
+    //process.exit(1);
+} else {
+    if (gitLogOutput.includes('breaking:')) {
+        newVersion[0]++;
+        newVersion[1] = 0;
+        newVersion[2] = 0;
+    } else if (gitLogOutput.includes('feat:')) {
+        newVersion[1]++;
+        newVersion[2] = 0;
+    } else if (gitLogOutput.includes('fix:') || gitLogOutput.includes('docs:') || gitLogOutput.includes('test:')) {
+        newVersion[2]++;
+    }
+
+    log(newVersion)
 }
 
-log('git log', gitLogOutput);
 
-if (gitLogOutput.includes('breaking:')) {
-    newVersion[0]++;
-    newVersion[1] = 0;
-    newVersion[2] = 0;
-} else if (gitLogOutput.includes('feat:')) {
-    newVersion[1]++;
-    newVersion[2] = 0;
-} else if (gitLogOutput.includes('fix:') || gitLogOutput.includes('docs:') || gitLogOutput.includes('test:')) {
-    newVersion[2]++;
-}
-
-log(newVersion)
 
 // if (gitStatusOutput.trim() !== "") {
 //     log("git status is not clean. commit or stash changes first");
