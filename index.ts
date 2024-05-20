@@ -12,12 +12,6 @@ import { join } from 'node:path';
 import fs from 'node:fs';
 
 function log(...args: any[]) {
-    args = args.map((arg: string) => {
-        if (arg.includes('\n')) {
-            return '\n' + arg
-        }
-        return arg;
-    });
     console.log(`\x1b[34m[${bunrePckg.name}]\x1b[0m`, ...args);
 }
 
@@ -42,7 +36,6 @@ const gitLogOutput = await Bun.$`git log origin..HEAD --oneline`.text();
 log('asserting git status is clean')
 if (gitLogOutput.trim() === "") {
     log("git log is empty.");
-    //process.exit(1);
 } else {
     if (gitLogOutput.includes('breaking:')) {
         newVersion[0]++;
@@ -54,15 +47,25 @@ if (gitLogOutput.trim() === "") {
     } else if (gitLogOutput.includes('fix:') || gitLogOutput.includes('docs:') || gitLogOutput.includes('test:')) {
         newVersion[2]++;
     }
-
-    log(newVersion)
+    log('git log origin..HEAD --oneline', gitLogOutput)
+    log('new version', newVersion)
 }
 
+if (gitStatusOutput.trim() !== "") {
+    log("git status is not clean. commiting chore: progress");
+    log('git status', gitStatusOutput)
+    const gitAddallOutput = await Bun.$`git add .`.text();
+    const gitCommitChoreOutput = await Bun.$`git commit -m "chore: progress"`.text();
 
+    log('git add .', gitAddallOutput)
+    log('git commit -m "chore: progress"', gitCommitChoreOutput)
 
-// if (gitStatusOutput.trim() !== "") {
-//     log("git status is not clean. commit or stash changes first");
-//     // process.exit(1);
-// }
-
-
+    try {
+        const gitPushChoreOutput = await Bun.$`git push origin`.text();
+        log('git push', gitPushChoreOutput)
+        log('pushed chore: progress')
+    } catch (e) {
+        log('please check your ~/.ssh/config and update origin in ./.git/config or check keys settings if you are using tools like gitkraken')
+        log('git push', e)
+    }
+} 
