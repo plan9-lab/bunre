@@ -4,6 +4,12 @@
  * @package bunre
  * Bun Git Release Manager
  *
+ * TODO: implement commands. 
+ * example: bunre feat <feat-name> --option1=1 --option2=2
+ * example: bunre docs
+ * 
+ * this should call feat(<featname>, { option1: 1, option2: 2 }) command
+ *
  * Known issues:
  */
 
@@ -34,10 +40,13 @@ assert(pckgVer, 'package.json version is not defined')
 
 const pckgVerParts = pckgVer.split('.') // major.minor.patch
 
-// check write access to repo by pushing random tag
-// and deleting it
+// ---
+// TODO: wrap this in function
+// check write access to repo by pushing random tag and deleting it
+// make sure you have key in ~/.ssh/
+// make you have ~/.ssh/config with correct key
+// make you have added key to github/gitlab
 const randomTagName = `v${Math.random().toString(36).substring(2)}`
-
 try {
     await _($`git tag ${randomTagName}`)
     await _($`git push origin ${randomTagName}`)
@@ -49,6 +58,7 @@ try {
     log('no write access to repo. exiting. please check your ~/.ssh/config')
     throw e
 }
+// ---
 
 log('cwd', cwd)
 info('bunre version', bunrePckg.version)
