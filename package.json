@@ -1,6 +1,6 @@
 {
   "name": "bunre",
-  "version": "0.8.6",
+  "version": "0.8.7",
   "description": "Bun Git Release Manager",
   "main": "index.ts",
   "module": "index.ts",
@@ -10,6 +10,9 @@
   },
   "peerDependencies": {
     "typescript": "^5.0.0"
+  },
+  "scripts": {
+    "dev": "NODE_ENV=development bun index.ts --watch"
   },
   "bin": "index.ts"
 }
