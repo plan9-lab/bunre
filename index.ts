@@ -4,6 +4,8 @@
  * This section should only be used for development comments
  * For the any other purpose use README.md
  * 
+ * TODO: https://isomorphic-git.org/en/
+ * 
  * TODO: implement commands. 
  * example: bunre feat <feat-name> --option1=1 --option2=2
  * example: bunre docs
@@ -11,11 +13,13 @@
  * this should call feat(<featname>, { option1: 1, option2: 2 }) command
  */
 
-import bunrePckg from './package.json' assert { type: 'json' };
 import { join } from 'node:path';
 import fs from 'node:fs';
 import assert from 'node:assert';
 import { $ } from 'bun'
+import bunrePckg from './package.json' assert { type: 'json' };
+
+process.exit(0)
 
 async function _(bun$Output: any) {
     return (await bun$Output.text()).trim()
