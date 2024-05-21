@@ -30,14 +30,16 @@ This will:
 ## Links
 
 - https://www.npmjs.com/package/inquirer
-- https://www.conventionalcommits.org/en/v1.0.0/
+- https://www.conventionalcommits.org/en/v1.0.0
+- https://www.npmjs.com/package/husky
 
 ## Roadmap
 
+- [ ] add tests
 - [ ] dry run mode should be default
 - [ ] release notes should be generated in MD files
 - [ ] add support for feature branches
 - [ ] add command line tools
 - [ ] when git status returns only MD automaticaly generate docs: ... commit and push
 - [ ] cli task manager with https://www.npmjs.com/package/inquirer
-- [ ] husky pre-commit hook
+- [ ] husky pre-commit hook setup: run lint and test before commit
