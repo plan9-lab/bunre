@@ -1,16 +1,14 @@
 #!/usr/bin/env bun
 
 /**
- * @package bunre
- * Bun Git Release Manager
- *
+ * This section should only be used for development comments
+ * For the any other purpose use README.md
+ * 
  * TODO: implement commands. 
  * example: bunre feat <feat-name> --option1=1 --option2=2
  * example: bunre docs
  * 
  * this should call feat(<featname>, { option1: 1, option2: 2 }) command
- *
- * Known issues:
  */
 
 import bunrePckg from './package.json' assert { type: 'json' };
@@ -36,7 +34,10 @@ const cwd = process.cwd()
 const pckg = JSON.parse(fs.readFileSync(join(cwd, 'package.json'), 'utf8'));
 const pckgVer = pckg.version
 
-assert(pckgVer, 'package.json version is not defined')
+assert(
+    pckgVer,
+    'package.json version is not defined'
+)
 
 const pckgVerParts = pckgVer.split('.') // major.minor.patch
 
