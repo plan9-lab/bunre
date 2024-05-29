@@ -20,6 +20,12 @@ import { $ } from 'bun'
 // do not use import becouse it will forse restart in watch mode
 // import bunrePckg from './package.json' assert { type: 'json' };
 const bunrePckg = JSON.parse(fs.readFileSync(join(__dirname, 'package.json'), 'utf8'));
+
+
+
+process.exit(0)
+
+
 async function _(bun$Output: any) {
     return (await bun$Output.text()).trim()
 }
