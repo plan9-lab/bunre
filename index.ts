@@ -17,10 +17,9 @@ import { join } from 'node:path';
 import fs from 'node:fs';
 import assert from 'node:assert';
 import { $ } from 'bun'
-import bunrePckg from './package.json' assert { type: 'json' };
-
-process.exit(0)
-
+// do not use import becouse it will forse restart in watch mode
+// import bunrePckg from './package.json' assert { type: 'json' };
+const bunrePckg = JSON.parse(fs.readFileSync(join(__dirname, 'package.json'), 'utf8'));
 async function _(bun$Output: any) {
     return (await bun$Output.text()).trim()
 }
@@ -52,6 +51,7 @@ const pckgVerParts = pckgVer.split('.') // major.minor.patch
 // make you have ~/.ssh/config with correct key
 // make you have added key to github/gitlab
 const randomTagName = `v${Math.random().toString(36).substring(2)}`
+
 try {
     await _($`git tag ${randomTagName}`)
     await _($`git push origin ${randomTagName}`)

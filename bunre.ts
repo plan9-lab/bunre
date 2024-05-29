@@ -1,13 +1,23 @@
 import { Console } from 'node:console'
 import { $ } from 'bun'
+import { parseCommit, parseSemver } from '@/lib/parsers'
+import fs from 'node:fs'
+import { join } from 'node:path'
 
+const cwd = process.cwd()
+let pckg
+try {
+    pckg = JSON.parse(fs.readFileSync(join(cwd, 'package.json'), 'utf8'));
+} catch (e: any) {
+    throw new Error(`package.json not found in ${cwd}`)
+}
+
+// Utility that parses Bun$ output to array of strings
 const _lines = async (bun$Output: any) => {
-    return (
-        await bun$Output.text())
+    return (await bun$Output.text())
         .trim()
         .split('\n')
-        .map((line: string) => line.trim()
-        )
+        .map((line: string) => line.trim())
 }
 
 class Bunlo extends Console {
@@ -41,10 +51,11 @@ class Bunlo extends Console {
 
     static getDefaultLogName = () => 'bunlo'
 
+
     static log = (...args: any[]) => {
 
         args.forEach((arg) => {
-            if (arg.constructor.name) {
+            if (arg.constructor.name === 'Promise') {
                 Bunlo.warn(
                     `you are using promise in log. this will be logged in the moment when promise is resolved. this is not the same as console.log.`,
                     `if you want to log promise use await Bunre.logAsync(...arg)`
@@ -74,21 +85,31 @@ abstract class Bunre {
     /**
      * @returns gets git log origin..HEAD --oneline in short format and returns it as trimmed string array
      */
-    static async log() {
+    static async gitLogShort() {
         // git log uncommited changes in short format
         const gitLogOutput = await _lines($`git log origin..HEAD --oneline`)
         return gitLogOutput
     }
 
     static parseConventionalCommits(gitLogOutput: string[]) {
-        for (const line of gitLogOutput) {
-            const parts = line.split(/:feat/)
-            console.log(parts)
-        }
+        const conventionalCommits = gitLogOutput.map(
+            (line: string) => parseCommit(line)).filter((commit: any) => commit !== null
+            )
 
+        return conventionalCommits
     }
 }
 
-const logOutput = await Bunre.log()
-Bunlo.log(Bunre.log())
-//Bunlo.log(Bunre.parseConventionalCommits(logOutput))
+const majors = ['breaking', 'major']
+const minors = ['feat', 'minor']
+const patches = ['fix', 'patch', 'docs', 'chore', 'test', 'refactor', 'perf', 'build', 'ci', 'revert', 'style', 'types', 'workflow']
+
+const logOutput = await Bunre.gitLogShort()
+const newVersion = parseSemver(pckg.version)
+
+const parsedLog = logOutput.map((line: string) => parseCommit(line))
+console.log(parsedLog)
+
+
+Bunlo.log('current version', parseSemver(pckg.version))
+Bunlo.log('new version', newVersion)
