@@ -68,7 +68,9 @@ const processLogOutpput = (logOutput: string[]) => {
     }, [false, false, false])
 }
 
-const bumpedVersion = Bunre.package.version.bump(...processLogOutpput(gitLogOnelineOutput))
+const bumpedVersion = Bunre.package.version.bump(
+    ...processLogOutpput(gitLogOnelineOutput)
+)
 
 console.log('Release:', hasReleaseParam)
 console.log('Current version:', Bunre.package.version.current)
@@ -83,7 +85,7 @@ if (bumpedVersion !== Bunre.package.version.current) {
     }, null, 2))
 
     if (hasReleaseParam) {
-        const pushOutput = await Bun.$`git add package.json && git tag -a v${bumpedVersion} -m "release: v${bumpedVersion}" && git push origin && git push --tags`
+        const pushOutput = await Bun.$`git add package.json && git tag -a v${bumpedVersion} -m "release: v${bumpedVersion}" && git push origin && git push --tags`.text()
         console.log(pushOutput)
     }
 } else {

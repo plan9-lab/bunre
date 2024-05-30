@@ -1,6 +1,6 @@
 {
   "name": "bunre",
-  "version": "0.20.0",
+  "version": "1.0.0",
   "description": "Bun Git Release Manager",
   "main": "index.ts",
   "module": "index.ts",
